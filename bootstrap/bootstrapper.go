@@ -18,12 +18,13 @@ type Bootstrapper struct {
 	AppName      string
 	AppOwner     string
 	AppSpawnDate time.Time
-
-	Sessions *sessions.Sessions
+	Database     string
+	Sessions     *sessions.Sessions
 }
 
 // New returns a new Bootstrapper.
 func New(appName, appOwner string, cfgs ...Configurator) *Bootstrapper {
+
 	b := &Bootstrapper{
 		AppName:      appName,
 		AppOwner:     appOwner,
@@ -34,13 +35,12 @@ func New(appName, appOwner string, cfgs ...Configurator) *Bootstrapper {
 	for _, cfg := range cfgs {
 		cfg(b)
 	}
-
 	return b
 }
 
 // SetupViews loads the templates.
 func (b *Bootstrapper) SetupViews(viewsDir string) {
-	b.RegisterView(iris.HTML(viewsDir, ".html").Layout("shared/layout.html"))
+	b.RegisterView(iris.HTML(viewsDir, ".html")) //.Layout("shared/layout.html"))
 }
 
 // SetupSessions initializes the sessions, optionally.
@@ -79,7 +79,7 @@ func (b *Bootstrapper) SetupErrorHandlers() {
 
 		ctx.ViewData("Err", err)
 		ctx.ViewData("Title", "Error")
-		ctx.View("shared/error.html")
+		ctx.View("core/resources/shared/error.html")
 	})
 }
 
@@ -101,8 +101,9 @@ func (b *Bootstrapper) Configure(cs ...Configurator) {
 //
 // Returns itself.
 func (b *Bootstrapper) Bootstrap() *Bootstrapper {
-	b.SetupViews("./web/views")
-	b.SetupSessions(24*time.Hour,
+	//b.SetupViews("./web/views")
+	b.SetupViews("./modules")
+	b.SetupSessions(15*time.Minute,
 		[]byte("the-big-and-secret-fash-key-here"),
 		[]byte("lot-secret-of-characters-big-too"),
 	)
