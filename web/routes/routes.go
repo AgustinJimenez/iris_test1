@@ -3,11 +3,20 @@ package routes
 import (
 	PagesControllers "../../modules/pages/http/controllers"
 	UserControllers "../../modules/users/http/controllers"
+	middleware "../middlewares"
 	"./../../bootstrap"
 )
 
 // Configure registers the necessary routes to the app.
 func Configure(b *bootstrap.Bootstrapper) {
+	backendRoutes := b.Party("/admin", middleware.BasicAuth)
+	{
+		backendRoutes.Layout("/views/layouts/admin.html")
+		backendRoutes.Controller("/", new(UserControllers.UserController))
+		//backendRoutes.Controller("/logout", new(controllers.AdminController))
+
+		//backendRoutes.Controller("/users", new(UserControllers.UsersController))
+	}
 
 	frontendRoutes := b.Party("/")
 	{
@@ -20,16 +29,5 @@ func Configure(b *bootstrap.Bootstrapper) {
 		//frontendRoutes.Get("/like/{id:long}", GetLikeHandler)
 
 	}
-	/*
-		backendRoutes := b.Party("/admin", middleware.BasicAuth)
-		{
-			backendRoutes.Layout("/views/layouts/admin.html")
-			backendRoutes.Controller("/", new(controllers.AdminController))
-			backendRoutes.Controller("/logout", new(controllers.AdminController))
-
-			//backendRoutes.Controller("/users", new(UserControllers.UsersController))
-		}
-	*/
-	// backendRoutes.Layout("/views/layouts/admin.html") // set a view layout for these routes, see more at view examples.
 
 }

@@ -5,12 +5,10 @@ import (
 	"github.com/go-xorm/xorm"
 )
 
-//_ = engine.Sync2(new(Users))
-func GetInstance() *xorm.Engine {
-	engine, err := xorm.NewEngine("mysql", "root:root@/iris?charset=utf8")
-	if err != nil {
-		panic(err)
-	}
+type Engine struct {
+	*xorm.Engine
+}
 
-	return engine
+func (this *Engine) New() (*xorm.Engine, error) {
+	return xorm.NewEngine("mysql", "root:root@/iris?charset=utf8")
 }

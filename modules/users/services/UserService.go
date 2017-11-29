@@ -1,29 +1,48 @@
 package services
 
 import (
-	"fmt"
+	"time"
 
 	"../datamodels"
 	"../repositories"
 )
 
-type UserService interface {
-	Create(user datamodels.User)
+type UserServiceInterface interface {
+	Create(password string, new_user datamodels.User) (datamodels.User, error)
+	GetById(id int64) (datamodels.User, error)
+	GetByUsernameAndPassword(username string, password string) (datamodels.User, error)
 }
 
-/*
-type userService struct {
+type UserService struct {
 	repo repositories.UserRepository
 }
-*/
 
-func Create(user datamodels.User) datamodels.User {
-	fmt.Printf("\nHERE IS SERVICE CREATE=======================>\n")
-	if user.Id > 0 || user.Firstname == "" || user.Lastname == "" || user.Username == "" || user.Email == "" || user.Password == "" {
-		fmt.Printf("\n ERROR ON USER SERVICE \n")
-		panic("unable to create this user")
+func (this *UserService) Create(password string, new_user datamodels.User) (datamodels.User, error) {
 
+	/*
+		if new_user.Id > 0 || new_user.Firstname == "" || new_user.Lastname == "" || new_user.Username == "" || new_user.Email == "" || password == "" {
+			return new_user, errors.New("unable to create this user")
+
+		}
+	*/
+	hashed, err := new_user.GeneratePassword(password)
+
+	if err != nil {
+		return new_user, err
 	}
-	user.GeneratePassword()
-	return repositories.Store(user)
+
+	new_user.Password = hashed
+	new_user.CreatedAt = time.Now()
+
+	return this.repo.Store(new_user)
+}
+
+func (this *UserService) GetById(id int64) (datamodels.User, error) {
+
+	return this.repo.GetById(id)
+}
+
+func (this *UserService) GetByUsernameAndPassword(username string, password string) (datamodels.User, error) {
+
+	return this.repo.GetByUsernameAndPassword(username, password)
 }
