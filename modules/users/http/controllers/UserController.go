@@ -3,6 +3,8 @@
 package UserControllers
 
 import (
+	"fmt"
+
 	"../../datamodels"
 	"../../services"
 	"github.com/kataras/iris/context"
@@ -34,12 +36,6 @@ type UserController struct {
 	Session *sessions.Session
 }
 
-// BeginRequest will set the current session to the controller.
-//
-// Remember: iris.Context and context.Context is exactly the same thing,
-// iris.Context is just a type alias for go 1.9 users.
-// We use context.Context here because we don't need all iris' root functions,
-// when we see the import paths, we make it visible to ourselves that this file is using only the context.
 func (this *UserController) BeginRequest(ctx context.Context) {
 	this.C.BeginRequest(ctx)
 
@@ -48,7 +44,6 @@ func (this *UserController) BeginRequest(ctx context.Context) {
 		ctx.StopExecution() // dont run the main method handler and any "done" handlers.
 		return
 	}
-
 	this.Session = this.Manager.Start(ctx)
 }
 
@@ -112,6 +107,8 @@ func (this *UserController) PostRegister() mvc.Result {
 // GetRegister handles GET: http://localhost:8080/user/register.
 func (this *UserController) GetAdmin() mvc.Result {
 
+	fmt.Println("USER SESSION user_id AND isLoggedIn =====>", this.getCurrentUserID(), this.isLoggedIn())
+	fmt.Println("CONTEXT=====>", this)
 	return mvc.View{
 		Name:   "users/resources/views/backend/dashboard/index.html",
 		Data:   context.Map{"Title": "User Registration"},
@@ -139,6 +136,8 @@ func (this *UserController) PostLogin() mvc.Result {
 	u, err := this.Service.GetByUsernameAndPassword(this.Ctx.FormValue("username"), this.Ctx.FormValue("password"))
 
 	this.Session.Set(userIDKey, u.Id)
+	fmt.Println("ON POST LOGIN USER IS =====>", this.getCurrentUserID(), this.isLoggedIn())
+
 	return mvc.Response{
 		Err:  err,
 		Path: "/admin",
