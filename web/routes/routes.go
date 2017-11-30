@@ -13,9 +13,7 @@ func Configure(b *bootstrap.Bootstrapper) {
 	{
 		backendRoutes.Layout("/views/layouts/admin.html")
 		backendRoutes.Controller("/", new(UserControllers.UserController))
-		backendRoutes.Controller("/logout", new(controllers.AdminController))
-
-		backendRoutes.Controller("/users", new(UserControllers.UsersController))
+		backendRoutes.Controller("/logout", new(UserControllers.UserController))
 	}
 
 	frontendRoutes := b.Party("/")
