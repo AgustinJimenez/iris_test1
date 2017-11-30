@@ -87,6 +87,7 @@ func (this *UserController) PostRegister() mvc.Result {
 		Email:     this.Ctx.FormValue("email"),
 	})
 	this.Session.Set(userIDKey, new_user.Id)
+	fmt.Println("AFTER SET SESSION ON POST REGISTER getCurrentUserID() =>", this.getCurrentUserID(), " AND isLoggedIn() => ", this.isLoggedIn())
 	//c.Status = 303
 	//c.Path = pathMyProfile
 
@@ -107,8 +108,8 @@ func (this *UserController) PostRegister() mvc.Result {
 // GetRegister handles GET: http://localhost:8080/user/register.
 func (this *UserController) GetAdmin() mvc.Result {
 
-	fmt.Println("USER SESSION user_id AND isLoggedIn =====>", this.getCurrentUserID(), this.isLoggedIn())
-	fmt.Println("CONTEXT=====>", this)
+	fmt.Println("ON ADMIN getCurrentUserID() =>", this.getCurrentUserID(), " AND isLoggedIn() => ", this.isLoggedIn())
+
 	return mvc.View{
 		Name:   "users/resources/views/backend/dashboard/index.html",
 		Data:   context.Map{"Title": "User Registration"},

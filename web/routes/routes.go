@@ -12,7 +12,7 @@ func Configure(b *bootstrap.Bootstrapper) {
 	backendRoutes := b.Party("/admin", middleware.BasicAuth)
 	{
 		backendRoutes.Layout("/views/layouts/admin.html")
-		backendRoutes.Controller("/", new(UserControllers.UserController))
+		backendRoutes.Controller("/", new(UserControllers.UserController), b.Sessions)
 		backendRoutes.Controller("/logout", new(UserControllers.UserController))
 	}
 
