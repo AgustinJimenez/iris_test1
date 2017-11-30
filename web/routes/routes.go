@@ -13,16 +13,16 @@ func Configure(b *bootstrap.Bootstrapper) {
 	{
 		backendRoutes.Layout("/views/layouts/admin.html")
 		backendRoutes.Controller("/", new(UserControllers.UserController))
-		//backendRoutes.Controller("/logout", new(controllers.AdminController))
+		backendRoutes.Controller("/logout", new(controllers.AdminController))
 
-		//backendRoutes.Controller("/users", new(UserControllers.UsersController))
+		backendRoutes.Controller("/users", new(UserControllers.UsersController))
 	}
 
 	frontendRoutes := b.Party("/")
 	{
 		frontendRoutes.Controller("/", new(PagesControllers.HomeController))
 		frontendRoutes.Controller("/", new(UserControllers.UserController), b.Sessions)
-		//frontendRoutes.Controller("/register", new(UserControllers.UserController))
+		frontendRoutes.Controller("/register", new(UserControllers.UserController))
 
 		//frontendRoutes.Get("/follower/{id:long}", GetFollowerHandler)
 		//frontendRoutes.Get("/following/{id:long}", GetFollowingHandler)
